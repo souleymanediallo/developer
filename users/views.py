@@ -21,19 +21,23 @@ def profile(request, pk):
 
 
 def loginPage(request):
+    page = 'login'
+
     if request.user.is_authenticated:
         return redirect('profiles')
+
     if request.method == 'POST':
-        username = request.POST.get('username').lower()
-        password = request.POST.get('password')
+        username = request.POST['username']
+        password = request.POST['password']
         try:
             user = User.objects.get(username=username)
         except:
             messages.error(request, 'Username does not exist')
+
         user = authenticate(request, username=username, password=password)
-        if user is None:
+        if user is not None:
             login(request, user)
-            return redirect('profiles')
+            return redirect(request.GET.get('next', 'home'))
         else:
             messages.error(request, 'Username OR password is incorrect')
 
@@ -42,7 +46,7 @@ def loginPage(request):
 
 def logoutPage(request):
     logout(request)
-    redirect('login')
+    return redirect('home')
 
 
 def registerUser(request):

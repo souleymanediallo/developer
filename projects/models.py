@@ -2,10 +2,12 @@ from django.db import models
 import uuid
 # Create your models here.
 
+URL_USER = "https://as2.ftcdn.net/v2/jpg/00/65/77/27/1000_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg"
+
 
 class Project(models.Model):
     title = models.CharField(max_length=200)
-    featured_image = models.CharField(max_length=300, null=True, blank=True)
+    featured_image = models.CharField(max_length=300, null=True, blank=True, default=URL_USER)
     description = models.TextField(blank=True, null=True)
     demo_link = models.CharField(max_length=200, null=True, blank=True)
     source_link = models.CharField(max_length=200, null=True, blank=True)
