@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile
+from .models import Profile, Skill
 # Register your models here.
 
 
@@ -12,3 +12,14 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Profile, ProfileAdmin)
+
+
+class SkillAdmin(admin.ModelAdmin):
+    list_display = ('owner', 'name')
+    list_display_links = ('owner', 'name')
+    search_fields = ('owner', 'name')
+    list_filter = ('owner', 'name')
+    list_per_page = 25
+
+
+admin.site.register(Skill, SkillAdmin)
