@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, SkillForm
 from .models import Profile
 
 
@@ -17,7 +17,11 @@ def profiles(request):
 
 def profile(request, pk):
     profile = Profile.objects.get(id=pk)
-    context = {'profile': profile}
+
+    topSkills = profile.skill_set.exclude(description__exact="")
+    otherSkills = profile.skill_set.filter(description="")
+
+    context = {'profile': profile, 'topSkills': topSkills, "otherSkills": otherSkills}
     return render(request, 'users/profile.html', context)
 
 
@@ -72,5 +76,51 @@ def registerUser(request):
 def userAccount(request):
     profile = request.user.profile
 
-    context = {'profile': profile}
+    skills = profile.skill_set.all()
+    projects = profile.project_set.all()
+
+    context = {'profile': profile, 'skills': skills, 'projects': projects}
     return render(request, "users/account.html", context)
+
+
+@ login_required(login_url='login')
+def skill_create(request):
+    profile = request.user.profile
+    form = SkillForm()
+    if request.method == "POST":
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            skill = form.save(commit=False)
+            skill.owner = profile
+            form.save()
+            return redirect('profiles')
+
+    context = {'form': form}
+    return render(request, "users/skill-form.html", context)
+
+
+@ login_required(login_url='login')
+def skill_update(request, pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    form = SkillForm(instance=skill)
+    if request.method == "POST":
+        form = SkillForm(request.POST, instance=skill)
+        if form.is_valid():
+            form.save()
+            return redirect('profiles')
+
+    context = {'form': form}
+    return render(request, "users/skill-form.html", context)
+
+
+@ login_required(login_url='login')
+def skill_delete(request, pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+    if request.method == "POST":
+        skill.delete()
+        return redirect('profiles')
+
+    context = {'skill': skill}
+    return render(request, "users/skill-confirm-delete.html", context)

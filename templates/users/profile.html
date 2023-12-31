@@ -8,7 +8,7 @@
             <div class="column column--1of3">
                 <div class="card text-center">
                     <div class="card__body dev">
-                        <img class="avatar avatar--xl" src="{{ profile.profile_image.url }}" />
+                        <img class="avatar avatar--xl" src="{{ profile.profile_image }}" />
                         <h2 class="dev__name">{{ profile.name }}</h2>
                         <p class="dev__title">Expirance FullStack Developer, Youtuber and Instructor</p>
                         <p class="dev__location">Based in Florida, USA</p>
@@ -21,19 +21,19 @@
 
                             {% if profile.source_twitter %}
                             <li>
-                                <a title="Twitter" href="{{profile.source_twitter}}" target="_blank"><i class="im im-twitter"></i></a>
+                                <a title="Twitter" href="{{ profile.source_twitter }}" target="_blank"><i class="im im-twitter"></i></a>
                             </li>
                             {% endif %}
 
                             {% if profile.source_linkedin %}
                             <li>
-                                <a title="LinkedIn" href="{{profile.source_linkedin}}" target="_blank"><i class="im im-linkedin"></i></a>
+                                <a title="LinkedIn" href="{{ profile.source_linkedin }}" target="_blank"><i class="im im-linkedin"></i></a>
                             </li>
                             {% endif %}
 
                             {% if profile.source_website %}
                             <li>
-                                <a title="Personal Website" href="{{profile.source_website}}" target="_blank"><i class="im im-globe"></i></a>
+                                <a title="Personal Website" href="{{ profile.source_website }}" target="_blank"><i class="im im-globe"></i></a>
                             </li>
                             {% endif %}
 
@@ -57,20 +57,20 @@
                 <div class="devInfo">
                     <h3 class="devInfo__title">Skills</h3>
                     <div class="devInfo__skills">
-
+                        {% for skill in topSkills %}
                         <div class="devSkill">
-                            <h4 class="devSkill__title">#</h4>
-                            <p class="devSkill__info">#</p>
+                            <h4 class="devSkill__title">{{ skill.name }}</h4>
+                            <p class="devSkill__info">{{ skill.description|slice:"120" }}</p>
                         </div>
-
+                        {% endfor %}
 
                         <h3 class="devInfo__subtitle">Other Skills</h3>
                         <div class="devInfo__otherSkills">
-
+                            {% for skill in otherSkills %}
                          <span class="tag tag--pill tag--sub tag--lg">
-                              <small></small>
+                              <small>{{ skill }}</small>
                             </span>
-
+                           {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                         <div class="column">
                             <div class="card project">
                                 <a href="single-project.html" class="project">
-                                    <img class="project__thumbnail" src="{{ project.featured_image.url }}" alt="project thumbnail" />
+                                    <img class="project__thumbnail" src="{{ project.featured_image }}" alt="project thumbnail" />
                                     <div class="card__body">
                                         <h3 class="project__title">{{ project.title }}</h3>
                                         <p><a class="project__author" href="profile.html">By {{ project.owner.user }}</a></p>
