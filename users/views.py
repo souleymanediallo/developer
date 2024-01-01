@@ -115,7 +115,6 @@ def skill_create(request):
     return render(request, "users/skill-form.html", context)
 
 
-
 @ login_required(login_url='login')
 def skill_update(request, pk):
     profile = request.user.profile

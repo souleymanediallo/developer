@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "layout.html" %}
 {% load static %}
 {% block content %}
 <!-- Main Section -->
@@ -8,7 +8,7 @@
         <div class="column column--1of3">
           <div class="card text-center">
             <div class="card__body dev">
-              <a class="tag tag--pill tag--main settings__btn" href="{% url 'account-update' %}"><i class="im im-edit"></i> Edit</a>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'edit-account' profile.id %}"><i class="im im-edit"></i> Edit</a>
               <img class="avatar avatar--xl dev__avatar" src="{{ profile.profile_image }}" />
               <h2 class="dev__name">{{ profile.account }}</h2>
               <p class="dev__title">{{ profile.short_into }}</p>
