@@ -31,6 +31,7 @@ class SkillForm(forms.ModelForm):
     class Meta:
         model = Skill
         fields = ['name', 'description']
+        exclude = ['user']
 
     def __init__(self, *args, **kwargs):
         super(SkillForm, self).__init__(*args, **kwargs)

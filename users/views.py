@@ -3,16 +3,27 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+from django.db.models import Q
 
 from .forms import CustomUserCreationForm, SkillForm, ProfileForm
-from .models import Profile
+from .models import Profile, Skill
 
 
 # Create your views here.
 def profiles(request):
-    profiles = Profile.objects.all()
-    context = {'profiles': profiles}
-    return render(request, 'users/profiles.html')
+    search_query = ''
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+
+    skills = Skill.objects.filter(name__iexact=search_query)
+
+    profiles = Profile.objects.distinct().filter(
+        Q(name__icontains=search_query) |
+        Q(short_intro__icontains=search_query) |
+        Q(skill__in=skills)
+    )
+    context = {'profiles': profiles, 'search_query': search_query}
+    return render(request, 'users/profiles.html', context)
 
 
 def profile(request, pk):
@@ -109,7 +120,7 @@ def skill_create(request):
             skill = form.save(commit=False)
             skill.owner = profile
             form.save()
-            return redirect('profiles')
+            return redirect('account')
 
     context = {'form': form}
     return render(request, "users/skill-form.html", context)
@@ -124,7 +135,7 @@ def skill_update(request, pk):
         form = SkillForm(request.POST, instance=skill)
         if form.is_valid():
             form.save()
-            return redirect('profiles')
+            return redirect('account')
 
     context = {'form': form}
     return render(request, "users/skill-form.html", context)
@@ -136,7 +147,7 @@ def skill_delete(request, pk):
     skill = profile.skill_set.get(id=pk)
     if request.method == "POST":
         skill.delete()
-        return redirect('profiles')
+        return redirect('account')
 
     context = {'skill': skill}
     return render(request, "users/skill-confirm-delete.html", context)
