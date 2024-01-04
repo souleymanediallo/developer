@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from users.models import Profile
 from .forms import ProjectForm
 from .models import Project
+from .utils import searchProjects
 
 
 # Create your views here.
@@ -13,8 +14,9 @@ def home(request):
 
 
 def project_list(request):
-    projects = Project.objects.all()
-    context = {'projects': projects}
+    projects, search_query = searchProjects(request)
+
+    context = {'projects': projects, 'search_query': search_query}
     return render(request, 'projects/project-list.html', context)
 
 
