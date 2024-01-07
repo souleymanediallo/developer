@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from users.models import Profile
-from .forms import ProjectForm
+from .forms import ProjectForm, ReviewForm
 from .models import Project
 from .utils import searchProjects, paginateProjects
 
@@ -20,9 +21,21 @@ def project_list(request):
     return render(request, 'projects/project-list.html', context)
 
 
+@login_required(login_url='login')
 def project_detail(request, pk):
     project = Project.objects.get(id=pk)
-    context = {'project': project}
+    form = ReviewForm()
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        review = form.save(commit=False)
+        review.project = project
+        review.owner = request.user.profile
+        review.save()
+        project.getVoteCount
+        messages.success(request, 'Your review was successfully submitted!')
+        return redirect('project-detail', pk=project.id)
+
+    context = {'project': project, 'form': form}
     return render(request, 'projects/project-detail.html', context)
 
 

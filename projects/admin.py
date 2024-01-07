@@ -8,7 +8,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('projet', 'value', 'id')
+    list_display = ('project', 'value', 'id')
 
 
 class TagAdmin(admin.ModelAdmin):
