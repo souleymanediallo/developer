@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Skill
+from .models import Profile, Skill, Message
 # Register your models here.
 
 
@@ -23,3 +23,14 @@ class SkillAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Skill, SkillAdmin)
+
+
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'recipient', 'name', 'email', 'subject', 'is_read')
+    list_display_links = ('sender', 'recipient', 'name', 'email', 'subject')
+    search_fields = ('sender', 'recipient', 'name', 'email', 'subject', 'is_read')
+    list_filter = ('sender', 'recipient', 'name', 'email', 'subject', 'is_read')
+    list_per_page = 25
+
+
+admin.site.register(Message, MessageAdmin)
